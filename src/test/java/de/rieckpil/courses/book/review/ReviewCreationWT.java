@@ -1,33 +1,18 @@
 package de.rieckpil.courses.book.review;
 
-import com.codeborne.selenide.CollectionCondition;
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.WebDriverRunner;
+import java.util.logging.Level;
+
 import de.rieckpil.courses.AbstractWebTest;
 import de.rieckpil.courses.book.management.Book;
 import de.rieckpil.courses.book.management.BookRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testcontainers.containers.BrowserWebDriverContainer;
 import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.shaded.org.apache.commons.lang.SystemUtils;
-import org.testcontainers.utility.DockerImageName;
-
-import java.io.File;
-import java.util.logging.Level;
-
-import static com.codeborne.selenide.Selenide.*;
-import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DisabledIfSystemProperty(named = "os.arch", matches = "aarch64", disabledReason = "Selenium Docker image doesn't support ARM64 (yet), see Selenium Docker image doesn't support ARM64 (yet), see https://github.com/rieckpil/testing-spring-boot-applications-masterclass/issues/31")
 class ReviewCreationWT extends AbstractWebTest {

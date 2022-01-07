@@ -1,7 +1,5 @@
 package de.rieckpil.courses.book.review;
 
-import java.io.File;
-
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
 import de.rieckpil.courses.AbstractWebTest;
@@ -12,7 +10,6 @@ import de.rieckpil.courses.pages.LoginPage;
 import de.rieckpil.courses.pages.NewReviewPage;
 import de.rieckpil.courses.pages.ReviewListPage;
 import org.apache.commons.lang3.SystemUtils;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;

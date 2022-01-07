@@ -13,9 +13,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-@ActiveProfiles("integration-test")
-@ContextConfiguration(initializers = WireMockInitializer.class)
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BookSynchronizationListenerIT {
 
   @Autowired
@@ -37,10 +34,10 @@ class BookSynchronizationListenerIT {
   private BookRepository bookRepository;
 
   @Test
-  public void shouldGetSuccessWhenClientIsAuthenticated() throws JOSEException {
+  void shouldGetSuccessWhenClientIsAuthenticated() throws JOSEException {
   }
 
   @Test
-  public void shouldReturnBookFromAPIWhenApplicationConsumesNewSyncRequest() {
+  void shouldReturnBookFromAPIWhenApplicationConsumesNewSyncRequest() {
   }
 }

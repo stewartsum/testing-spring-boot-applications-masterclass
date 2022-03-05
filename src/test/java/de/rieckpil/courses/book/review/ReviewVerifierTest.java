@@ -22,6 +22,9 @@ class ReviewVerifierTest {
 
   private ReviewVerifier reviewVerifier;
 
+  @Test
+  void firstTest() {}
+
   @BeforeEach
   public void setup() {
     reviewVerifier = new ReviewVerifier();

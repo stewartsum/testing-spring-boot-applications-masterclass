@@ -18,30 +18,19 @@ class ReviewVerifierTest {
 
   private ReviewVerifier reviewVerifier;
 
-  @Test
-  void shouldFailWhenReviewContainsSwearWord() {
-
-    String review = "This book is shit";
-
-    ReviewVerifier reviewVerifier = new ReviewVerifier();
-
-    boolean result = reviewVerifier.doesMeetQualityStandards(review);
-    Assertions.assertFalse(result);
-  }
-
   @BeforeEach
   public void setup() {
     reviewVerifier = new ReviewVerifier();
   }
 
-//  @Test
-//  void shouldFailWhenReviewContainsSwearWord() {
-//    String review = "This book is shit";
-//    System.out.println("Testing a review");
-//
-//    boolean result = reviewVerifier.doesMeetQualityStandards(review);
-//    assertFalse(result, "ReviewVerifier did not detect swear word");
-//  }
+  @Test
+  void shouldFailWhenReviewContainsSwearWord() {
+    String review = "This book is shit";
+    System.out.println("Testing a review");
+
+    boolean result = reviewVerifier.doesMeetQualityStandards(review);
+    assertFalse(result, "ReviewVerifier did not detect swear word");
+  }
 
   @Test
   @DisplayName("Should fail when review contains 'lorem ipsum'")

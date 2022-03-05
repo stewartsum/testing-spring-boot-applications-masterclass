@@ -1,12 +1,8 @@
 package de.rieckpil.courses.book.review;
 
-import org.assertj.core.api.Assertions;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
@@ -23,21 +19,29 @@ class ReviewVerifierTest {
   private ReviewVerifier reviewVerifier;
 
   @Test
-  void firstTest() {}
+  void shouldFailWhenReviewContainsSwearWord() {
+
+    String review = "This book is shit";
+
+    ReviewVerifier reviewVerifier = new ReviewVerifier();
+
+    boolean result = reviewVerifier.doesMeetQualityStandards(review);
+    Assertions.assertFalse(result);
+  }
 
   @BeforeEach
   public void setup() {
     reviewVerifier = new ReviewVerifier();
   }
 
-  @Test
-  void shouldFailWhenReviewContainsSwearWord() {
-    String review = "This book is shit";
-    System.out.println("Testing a review");
-
-    boolean result = reviewVerifier.doesMeetQualityStandards(review);
-    assertFalse(result, "ReviewVerifier did not detect swear word");
-  }
+//  @Test
+//  void shouldFailWhenReviewContainsSwearWord() {
+//    String review = "This book is shit";
+//    System.out.println("Testing a review");
+//
+//    boolean result = reviewVerifier.doesMeetQualityStandards(review);
+//    assertFalse(result, "ReviewVerifier did not detect swear word");
+//  }
 
   @Test
   @DisplayName("Should fail when review contains 'lorem ipsum'")

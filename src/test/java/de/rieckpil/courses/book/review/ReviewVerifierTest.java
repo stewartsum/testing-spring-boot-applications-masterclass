@@ -33,8 +33,15 @@ class ReviewVerifierTest {
   }
 
   @Test
-  @DisplayName("Should fail when review contains 'lorem ipsum'")
+  @DisplayName("Should fail when review contains \"lorem ipsum\"")
   void testLoremIpsum() {
+
+    String review = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut" +
+      " labore et dolore magna aliqua. Aliquet sagittis id consectetur purus ut faucibus pulvinar elementum.";
+
+
+    boolean result = reviewVerifier.doesMeetQualityStandards(review);
+    assertFalse(result, "ReviewVerifier did not detect lorem ipsum");
   }
 
   @ParameterizedTest

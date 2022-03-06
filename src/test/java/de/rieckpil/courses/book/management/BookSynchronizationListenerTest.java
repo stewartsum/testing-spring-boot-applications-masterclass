@@ -66,7 +66,7 @@ class BookSynchronizationListenerTest {
     when(bookRepository.findByIsbn(VALID_ISBN)).thenReturn(null);
 
     Book requestedBook = new Book();
-    requestedBook.setTitle("Java Book");
+    requestedBook.setTitle("Java book");
     requestedBook.setIsbn(VALID_ISBN);
 
     when(openLibraryApiClient.fetchMetadataForBook(VALID_ISBN)).thenReturn(requestedBook);
@@ -77,6 +77,12 @@ class BookSynchronizationListenerTest {
     });
 
     cut.consumeBookUpdates(bookSynchronization);
+
+    verify(bookRepository).save(bookArgumentCaptor.capture());
+
+    Book methodArgument = bookArgumentCaptor.getValue();
+    assertEquals("Java book", methodArgument.getTitle());
+    assertEquals(VALID_ISBN, methodArgument.getIsbn());
   }
 
 }

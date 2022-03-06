@@ -37,6 +37,14 @@ class BookSynchronizationListenerTest {
 
   @Test
   public void shouldNotOverrideWhenBookAlreadyExists() {
+
+    BookSynchronization bookSynchronization = new BookSynchronization("1234567801234");
+    when(bookRepository.findByIsbn("1234567801234")).thenReturn(new Book());
+
+    cut.consumeBookUpdates(bookSynchronization);
+
+    verifyNoInteractions(openLibraryApiClient);
+    verify(bookRepository, times(0)).save(ArgumentMatchers.any());
   }
 
   @Test

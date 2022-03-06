@@ -1,5 +1,6 @@
 package de.rieckpil.courses.book.review;
 
+import org.assertj.core.api.Assertions;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
@@ -60,13 +61,41 @@ class ReviewVerifierTest {
 
   @Test
   void shouldPassWhenReviewIsGood() {
+    String review = "I can totally recommend this book " +
+      "who is interested in learning how to write Java code!";
+
+    boolean result = reviewVerifier.doesMeetQualityStandards(review);
+    assertTrue(result, "ReviewVerifier did not pass a good review");
   }
 
   @Test
   void shouldPassWhenReviewIsGoodHamcrest() {
+    String review = "I can totally recommend this book " +
+      "who is interested in learning how to write Java code!";
+
+    boolean result = reviewVerifier.doesMeetQualityStandards(review);
+    // assertTrue(result, "ReviewVerifier did not pass a good review"); // JUnit 5
+
+    MatcherAssert.assertThat("ReviewVerifier did not pass a good review", result, Matchers.equalTo(true));
+    MatcherAssert.assertThat("Lorem ipsum", Matchers.endsWith("ipsum"));
+    MatcherAssert.assertThat(List.of(1, 2, 3, 4, 5), Matchers.hasSize(5));
+    MatcherAssert.assertThat(List.of(1, 2, 3, 4, 5), Matchers.anyOf(Matchers.hasSize(5), Matchers.emptyIterable()));
   }
 
   @Test
   void shouldPassWhenReviewIsGoodAssertJ() {
+    String review = "I can totally recommend this book " +
+      "who is interested in learning how to write Java code!";
+
+    boolean result = reviewVerifier.doesMeetQualityStandards(review);
+    // assertTrue(result, "ReviewVerifier did not pass a good review"); // JUnit 5
+
+    Assertions.assertThat(result)
+      .withFailMessage("ReviewVerifier did not pass a good review")
+      .isEqualTo(true)
+      .isTrue();
+
+    Assertions.assertThat(List.of(1, 2, 3, 4, 5)).hasSizeBetween(1, 10);
+    Assertions.assertThat(List.of(1, 2, 3, 4, 5)).contains(3).isNotEmpty();
   }
 }

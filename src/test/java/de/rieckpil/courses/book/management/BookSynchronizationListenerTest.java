@@ -1,10 +1,12 @@
 package de.rieckpil.courses.book.management;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -38,8 +40,8 @@ class BookSynchronizationListenerTest {
   @Test
   public void shouldNotOverrideWhenBookAlreadyExists() {
 
-    BookSynchronization bookSynchronization = new BookSynchronization("1234567801234");
-    when(bookRepository.findByIsbn("1234567801234")).thenReturn(new Book());
+    BookSynchronization bookSynchronization = new BookSynchronization(VALID_ISBN);
+    when(bookRepository.findByIsbn(VALID_ISBN)).thenReturn(new Book());
 
     cut.consumeBookUpdates(bookSynchronization);
 
@@ -49,6 +51,12 @@ class BookSynchronizationListenerTest {
 
   @Test
   public void shouldThrowExceptionWhenProcessingFails() {
+
+    BookSynchronization bookSynchronization = new BookSynchronization(VALID_ISBN);
+    when(bookRepository.findByIsbn(VALID_ISBN)).thenReturn(null);
+    when(openLibraryApiClient.fetchMetadataForBook(VALID_ISBN)).thenThrow(new RuntimeException("Network timeout"));
+
+    assertThrows(RuntimeException.class, () -> cut.consumeBookUpdates(bookSynchronization));
   }
 
   @Test

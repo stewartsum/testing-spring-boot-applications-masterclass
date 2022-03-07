@@ -18,10 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @DataJpaTest(properties = {
   "spring.flyway.enabled=false", // Disable Flyway
   "spring.jpa.hibernate.ddl-auto=create-drop", // Helpful for in-memory databases
-  "spring.datasource.driver-class-name=com.p6spy.engine.spy.P6SpyDriver", // P6Spy
-  "spring.datasource.url=jdbc:p6spy:h2:mem:testing;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false" // P6Spy
+  "spring.datasource.driver-class-name=com.p6spy.engine.spy.P6SpyDriver", // P6Spy is a framework that enables database data to be seamlessly intercepted and logged with no code changes to the application.
+  "spring.datasource.url=jdbc:p6spy:h2:mem:testing;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false" // P6Spy is a framework that enables database data to be seamlessly intercepted and logged with no code changes to the application.
 })
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // Don't replace the application default DataSource.
 class ReviewRepositoryTest {
 
   @Autowired

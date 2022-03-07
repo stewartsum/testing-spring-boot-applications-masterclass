@@ -22,15 +22,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest
-@Testcontainers(disabledWithoutDocker = true)
+//@Testcontainers(disabledWithoutDocker = true)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class ReviewRepositoryNoInMemoryTest {
 
-  @Container
+//  @Container
   static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:12.3")
     .withDatabaseName("test")
     .withUsername("duke")
     .withPassword("s3cret");
+
+  static {
+    container.start();
+  }
 
   @DynamicPropertySource
   static void properties(DynamicPropertyRegistry registry) {

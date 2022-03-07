@@ -30,7 +30,18 @@ class ReviewRepositoryNoInMemoryTest {
   static PostgreSQLContainer<?> container = new PostgreSQLContainer<>("postgres:12.3")
     .withDatabaseName("test")
     .withUsername("duke")
-    .withPassword("s3cret");
+    .withPassword("s3cret")
+    .withReuse(true);
+
+  /*
+  vi ~/.testcontainers.properties
+
+  #Modified by Testcontainers
+  #Sat Mar 05 23:50:04 MST 2022
+  docker.client.strategy=org.testcontainers.dockerclient.UnixSocketClientProviderStrategy
+  testcontainers.reuse.enable=true # Add this for .withReuse(true) to work
+
+   */
 
   static {
     container.start();

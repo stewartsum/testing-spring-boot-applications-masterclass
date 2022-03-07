@@ -38,6 +38,12 @@ class ReviewRepositoryTest {
 
   @Test
   void notNull() throws SQLException {
+
+    assertNotNull(entityManager);
+    assertNotNull(cut);
+    assertNotNull(dataSource);
+
+    System.out.println("Database Product Name: " + dataSource.getConnection().getMetaData().getDatabaseProductName()); // Database Product Name: H2
   }
 
   @Test

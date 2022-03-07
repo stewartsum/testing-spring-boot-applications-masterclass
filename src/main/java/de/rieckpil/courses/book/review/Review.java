@@ -32,10 +32,6 @@ public class Review {
   @ManyToOne
   private User user;
 
-  public Review(String content) {
-    this.content = content;
-  }
-
   public Long getId() {
     return id;
   }

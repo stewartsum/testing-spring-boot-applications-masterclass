@@ -16,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @DataJpaTest(properties = {
-  "spring.flyway.enabled=false",
-  "spring.jpa.hibernate.ddl-auto=create-drop",
+  "spring.flyway.enabled=false", // Disable Flyway
+  "spring.jpa.hibernate.ddl-auto=create-drop", // Helpful for in-memory databases
   "spring.datasource.driver-class-name=com.p6spy.engine.spy.P6SpyDriver", // P6Spy
   "spring.datasource.url=jdbc:p6spy:h2:mem:testing;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false" // P6Spy
 })

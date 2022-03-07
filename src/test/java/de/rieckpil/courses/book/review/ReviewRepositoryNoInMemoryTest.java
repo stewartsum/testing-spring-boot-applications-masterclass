@@ -15,8 +15,10 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -33,16 +35,6 @@ class ReviewRepositoryNoInMemoryTest {
     .withPassword("s3cret")
     .withReuse(true);
 
-  /*
-  vi ~/.testcontainers.properties
-
-  #Modified by Testcontainers
-  #Sat Mar 05 23:50:04 MST 2022
-  docker.client.strategy=org.testcontainers.dockerclient.UnixSocketClientProviderStrategy
-  testcontainers.reuse.enable=true # Add this for .withReuse(true) to work
-
-   */
-
   static {
     container.start();
   }
@@ -55,67 +47,46 @@ class ReviewRepositoryNoInMemoryTest {
   }
 
   @Autowired
-  private EntityManager entityManager;
-
-  @Autowired
   private ReviewRepository cut;
-
-  @Autowired
-  private DataSource dataSource;
-
-  @Autowired
-  private TestEntityManager testEntityManager;
-
-  @BeforeEach
-  void beforeEach() {
-    assertEquals(0, cut.count());
-  }
-
-  @Test
-  void notNull() throws SQLException {
-
-    assertNotNull(entityManager);
-    assertNotNull(cut);
-    assertNotNull(testEntityManager);
-    assertNotNull(dataSource);
-
-    System.out.println("Database Product Name: " + dataSource.getConnection().getMetaData().getDatabaseProductName()); // Database Product Name: H2
-
-    Review review = new Review();
-    review.setContent("Duke");
-    review.setTitle("Review 101");
-    review.setCreatedAt(LocalDateTime.now());
-    review.setRating(5);
-    review.setBook(null);
-    review.setUser(null);
-
-    Review result = cut.save(review); // insert into reviews (id, book_id, content, created_at, rating, title, user_id) values (null, NULL, 'Good review', '2022-03-07T02:25:56.879-0700', 5, 'Review 101', NULL);
-
-    System.out.println("result: " + result); // result: Review{id=1, title='Review 101', content='Good review', rating=5, createdAt=2022-03-07T02:25:56.879116008, book=null, user=null}
-    assertNotNull(result.getId());
-  }
-
-  @Test
-  void transactionalSupportTest() {
-
-    Review review = new Review();
-    review.setContent("Duke");
-    review.setTitle("Review 101");
-    review.setCreatedAt(LocalDateTime.now());
-    review.setRating(5);
-    review.setBook(null);
-    review.setUser(null);
-
-    Review result = cut.save(review);
-
-  }
 
   @Test
   @Sql(scripts = "/scripts/INIT_REVIEW_EACH_BOOK.sql")
   void shouldGetTwoReviewStatisticsWhenDatabaseContainsTwoBooksWithReview() {
+
+    List<ReviewStatistic> reviewStatistics = cut.getReviewStatistics();
+    assertEquals(3, cut.count());
+    assertEquals(2, reviewStatistics.size());
+
+    reviewStatistics.forEach(reviewStatistic -> {
+      System.out.println("ReviewStatistic");
+      System.out.println(reviewStatistic.getId());
+      System.out.println(reviewStatistic.getAvg());
+      System.out.println(reviewStatistic.getIsbn());
+      System.out.println(reviewStatistic.getRatings());
+      System.out.println("");
+    });
+    /*
+        ReviewStatistic
+        2
+        3.00
+        1234567891235
+        2
+
+        ReviewStatistic
+        1
+        5.00
+        1234567891234
+        1
+
+     */
+
+    assertEquals(2, reviewStatistics.get(0).getRatings());
+    assertEquals(2, reviewStatistics.get(0).getId());
+    assertEquals(new BigDecimal("3.00"), reviewStatistics.get(0).getAvg());
   }
 
   @Test
-  void databaseShouldBeEmpty() {
+  void databaseShouldBeEmpty() { // Do not write this in your own test. Only here to show the database is empty after previous test runs
+    assertEquals(0, cut.count());
   }
 }

@@ -3,21 +3,20 @@ package de.rieckpil.courses.book.review;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
-import static org.mockito.Mockito.*;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ReviewController.class)
 class ReviewControllerTest {
@@ -30,8 +29,30 @@ class ReviewControllerTest {
 
   private ObjectMapper objectMapper;
 
+  @BeforeEach
+  void beforeEach() {
+    this.objectMapper = new ObjectMapper();
+  }
+
   @Test
   void shouldReturnTwentyReviewsWithoutAnyOrderWhenNoParametersAreSpecified() throws Exception {
+
+    ArrayNode result = objectMapper.createArrayNode();
+
+    ObjectNode statistic = objectMapper.createObjectNode();
+    statistic.put("bookId", 1);
+    statistic.put("isbn", "42");
+    statistic.put("avg", 89.3);
+    statistic.put("ratings", 2);
+
+    result.add(statistic);
+
+    when(reviewService.getAllReviews(20, "none")).thenReturn(result);
+
+    this.mockMvc
+      .perform(get("/api/books/reviews"))
+      .andExpect(status().isOk())
+      .andExpect(jsonPath("$.size()", is(1)));
   }
 
   @Test

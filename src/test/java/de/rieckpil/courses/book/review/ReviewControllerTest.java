@@ -12,9 +12,9 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -60,14 +60,21 @@ class ReviewControllerTest {
     this.mockMvc
       .perform(get("/api/books/reviews/statistics"))
       .andExpect(status().isUnauthorized());
+
+    verifyNoInteractions(reviewService);
   }
 
   @Test
-  @WithMockUser(username = "duke")
+  // @WithMockUser(username = "duke")
   void shouldReturnReviewStatisticsWhenUserIsAuthenticated() throws Exception {
     this.mockMvc
-      .perform(get("/api/books/reviews/statistics"))
+      .perform(get("/api/books/reviews/statistics")
+        // .with(user("duke")))
+        // .with(httpBasic("duke", "password")))
+        .with(jwt()))
       .andExpect(status().isOk());
+
+    verify(reviewService).getReviewStatistics();
   }
 
   @Test

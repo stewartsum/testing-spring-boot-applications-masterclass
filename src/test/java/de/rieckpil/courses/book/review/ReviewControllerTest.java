@@ -107,6 +107,24 @@ class ReviewControllerTest {
 
   @Test
   void shouldRejectNewBookReviewForAuthenticatedUsersWithInvalidPayload() throws Exception {
+
+    String requestBody = """
+        {
+          "reviewContent": "I really like this book!",
+          "rating": -1
+        }
+      """;
+
+    this
+      .mockMvc
+      .perform(post("/api/books/{isbn}/reviews", 42)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(requestBody)
+        .with(jwt().jwt(builder -> builder
+          .claim("email", "duke@spring.io")
+          .claim("preferred_username", "duke"))))
+      .andExpect(status().isBadRequest());
+
   }
 
   @Test

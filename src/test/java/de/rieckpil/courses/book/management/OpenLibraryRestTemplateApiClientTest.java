@@ -5,10 +5,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
-import org.springframework.test.web.client.match.MockRestRequestMatchers;
 import org.springframework.test.web.client.response.MockRestResponseCreators;
+import org.springframework.web.client.HttpServerErrorException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
@@ -107,6 +108,12 @@ class OpenLibraryRestTemplateApiClientTest {
 
   @Test
   void shouldPropagateExceptionWhenRemoteSystemIsDown() {
+    this.mockRestServiceServer
+      .expect(requestTo("/api/books?jscmd=data&format=json&bibkeys=ISBN:" + ISBN))
+      //.andRespond(MockRestResponseCreators.withServerError())
+      .andRespond(MockRestResponseCreators.withStatus(HttpStatus.BAD_GATEWAY));
+
+    assertThrows(HttpServerErrorException.class, () -> cut.fetchMetadataForBook(ISBN));
   }
 
   @Test

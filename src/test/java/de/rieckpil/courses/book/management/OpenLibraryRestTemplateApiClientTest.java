@@ -8,10 +8,12 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.client.MockRestServiceServer;
+import org.springframework.test.web.client.match.MockRestRequestMatchers;
 import org.springframework.test.web.client.response.MockRestResponseCreators;
 import org.springframework.web.client.HttpServerErrorException;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.header;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
@@ -118,5 +120,16 @@ class OpenLibraryRestTemplateApiClientTest {
 
   @Test
   void shouldContainCorrectHeadersWhenRemoteSystemIsInvoked() {
+
+    this.mockRestServiceServer
+      .expect(requestTo("/api/books?jscmd=data&format=json&bibkeys=ISBN:" + ISBN))
+      .andExpect(MockRestRequestMatchers.header("X-Custom-Auth", "Duke42"))
+      .andExpect(MockRestRequestMatchers.header("X-Customer-Id", "42"))
+      .andRespond(withSuccess(new ClassPathResource("/stubs/openlibrary/success-" + ISBN + ".json"),
+        MediaType.APPLICATION_JSON));
+
+    Book result = cut.fetchMetadataForBook(ISBN);
+
+    assertNotNull(result);
   }
 }

@@ -28,10 +28,22 @@ class OpenLibraryRestTemplateApiClientTest {
 
   @Test
   void shouldInjectBeans() {
+    assertNotNull(cut);
+    assertNotNull(mockRestServiceServer);
   }
 
   @Test
   void shouldReturnBookWhenResultIsSuccess() {
+
+    this.mockRestServiceServer
+      .expect(MockRestRequestMatchers.requestTo("/api/books?jscmd=data&format=json&bibkeys=ISBN:" + ISBN))
+      .andRespond(MockRestResponseCreators.withSuccess(new ClassPathResource("/stubs/openlibrary/success-" + ISBN + ".json"),
+        MediaType.APPLICATION_JSON));
+
+    Book result = cut.fetchMetadataForBook(ISBN);
+
+    assertNotNull(result);
+
   }
 
   @Test
